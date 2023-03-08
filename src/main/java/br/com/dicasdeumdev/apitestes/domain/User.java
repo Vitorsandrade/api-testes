@@ -9,7 +9,6 @@ import lombok.*;
 @Entity
 @Builder
 @With
-@Table(name = "tb_user")
 public class User {
 
     @Id
