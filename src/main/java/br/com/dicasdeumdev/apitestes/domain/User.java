@@ -1,7 +1,8 @@
 package br.com.dicasdeumdev.apitestes.domain;
 
-import jakarta.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
