@@ -6,6 +6,7 @@ import br.com.dicasdeumdev.apitestes.repositories.UserRepository;
 import br.com.dicasdeumdev.apitestes.services.UserService;
 import br.com.dicasdeumdev.apitestes.services.exceptions.DataIntegratyViolationException;
 import br.com.dicasdeumdev.apitestes.services.exceptions.ObjectNotFoundException;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Log4j2
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -50,9 +52,9 @@ public class UserServiceImpl implements UserService {
         repository.deleteById(id);
     }
 
-    private void findByEmail(UserDTO dto){
+    private void findByEmail(UserDTO dto) {
         Optional<User> user = repository.findByEmail(dto.getEmail());
-        if(user.isPresent() && !user.get().getId().equals(dto.getEmail())) {
+        if (user.isPresent() && !user.get().getId().equals(dto.getEmail())) {
             throw new DataIntegratyViolationException("E-mail já cadastrado no sistema!");
         }
     }
