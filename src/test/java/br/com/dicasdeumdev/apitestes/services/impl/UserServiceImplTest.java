@@ -3,6 +3,7 @@ package br.com.dicasdeumdev.apitestes.services.impl;
 import br.com.dicasdeumdev.apitestes.domain.User;
 import br.com.dicasdeumdev.apitestes.domain.dto.UserDTO;
 import br.com.dicasdeumdev.apitestes.repositories.UserRepository;
+import br.com.dicasdeumdev.apitestes.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -63,6 +64,22 @@ class UserServiceImplTest {
         assertEquals(NAME, response.getName());
         assertEquals(EMAIL, response.getEmail());
 
+    }
+
+    @Test
+    void whenFindByIdThenReturnAnObjectNotFoundException() {
+        //"mocka" o método findById da camaada de repository para que quando chamada lance uma exception
+        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto não encontrado!"));
+
+        try {
+            //chamando findById e assim lançando exception que será capturada pelo catch
+            service.findById(ID);
+        } catch (Exception ex){
+            //confirma retorno de exception
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            //assegure que as mensagens das exceptions sejam iguais
+            assertEquals("Objeto não encontrado!", ex.getMessage());
+        }
     }
 
     @Test
