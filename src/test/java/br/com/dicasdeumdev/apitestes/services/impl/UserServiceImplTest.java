@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +27,8 @@ class UserServiceImplTest {
     public static final String NAME = "vitor";
     public static final String EMAIL = "vitor@gmail.com";
     public static final String PASSWORD = "123";
+    public static final String OBJETO_NÃO_ENCONTRADO = "Objeto não encontrado!";
+    private static final int INDEX = 0;
     @InjectMocks
     private UserServiceImpl service;
 
@@ -69,7 +72,7 @@ class UserServiceImplTest {
     @Test
     void whenFindByIdThenReturnAnObjectNotFoundException() {
         //"mocka" o método findById da camaada de repository para que quando chamada lance uma exception
-        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto não encontrado!"));
+        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJETO_NÃO_ENCONTRADO));
 
         try {
             //chamando findById e assim lançando exception que será capturada pelo catch
@@ -78,12 +81,28 @@ class UserServiceImplTest {
             //confirma retorno de exception
             assertEquals(ObjectNotFoundException.class, ex.getClass());
             //assegure que as mensagens das exceptions sejam iguais
-            assertEquals("Objeto não encontrado!", ex.getMessage());
+            assertEquals(OBJETO_NÃO_ENCONTRADO, ex.getMessage());
         }
     }
 
     @Test
-    void findAll() {
+    void whenFindAllThenReturnAnListOfUsers() {
+        //"mocka" o método findAll da camaada de repository para que quando chamada receba uma lista de User
+        when(repository.findAll()).thenReturn(List.of(user));
+
+        List<User> response = service.findAll();
+
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(User.class, response.get(INDEX).getClass());
+
+        assertEquals(ID, response.get(INDEX).getId());
+        assertEquals(NAME, response.get(INDEX).getName());
+        assertEquals(EMAIL, response.get(INDEX).getEmail());
+    }
+
+    @Test
+    void whensFindAllThenReturnAnListOfUsers() {
     }
 
     @Test
