@@ -13,6 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest
 class UserServiceImplTest {
 
@@ -42,7 +47,22 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findById() {
+    void whenFinByIdThenReturnAnUserInstance() {
+        //"mocka" o método findById da camaada de repository para que quando chamada receba o optionalUser
+        when(repository.findById(anyInt())).thenReturn(optionalUser);
+
+        //faz a chamada do método findById da camada de serviço
+        User response = service.findById(ID);
+
+        //assegura que não passou objeto nulo
+        assertNotNull(response);
+        //assegura que ambos são iguais (argumentos)
+        assertEquals(User.class, response.getClass());
+        //assegura que ambos tem o mesmo ID
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+
     }
 
     @Test
@@ -63,7 +83,7 @@ class UserServiceImplTest {
 
     private void startUser() {
         user = new User(ID, NAME, EMAIL, PASSWORD);
-        userDTO = new UserDTO(ID,NAME,EMAIL,PASSWORD);
-        optionalUser = Optional.of(new User(ID,NAME,EMAIL,PASSWORD));
+        userDTO = new UserDTO(ID, NAME, EMAIL, PASSWORD);
+        optionalUser = Optional.of(new User(ID, NAME, EMAIL, PASSWORD));
     }
 }
